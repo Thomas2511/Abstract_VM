@@ -6,7 +6,9 @@
 enum	tokenType {
 	UNKNOWN = 0,
 	OPERATOR,
-	TYPE,
+	OPERATOR_VAL,
+	PRECISION_INT,
+	PRECISION_FLOAT,
 	OPENING_PAR,
 	CLOSING_PAR,
 	NATURAL_VAL,
@@ -24,12 +26,15 @@ class Token
 
 		std::string				getValue( void ) const;
 		tokenType				getType( void ) const;
+		int						getLineNum( void ) const;
 		void					setValue(std::string const val);
 		void					setType(tokenType const tkn);
+		void					setLineNum(int const nb);
 
 	private:
 		std::string				_value;
 		tokenType				_type;
+		int						_lineNum;
 
 };
 

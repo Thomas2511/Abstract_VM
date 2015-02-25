@@ -9,7 +9,9 @@ class Analyzer
 	public:
 		static void				analyzer(std::list<Token> * tkns);
 		static bool				isOperator(Token & tkn);
-		static bool				isType(Token & tkn);
+		static bool				isOperatorVal(Token & tkn);
+		static bool				isPrecisionInt(Token & tkn);
+		static bool				isPrecisionFloat(Token & tkn);
 		static bool				isOpeningPar(Token & tkn);
 		static bool				isClosingPar(Token & tkn);
 		static bool				isNaturalVal(Token & tkn);

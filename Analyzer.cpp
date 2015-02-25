@@ -1,10 +1,13 @@
 #include "Analyzer.hpp"
+#include "AnalyzerExcept.hpp"
 
 void				Analyzer::analyzer(std::list<Token> * tkns)
 {
 	f				tab[] = {
 		&Analyzer::isOperator,
-		&Analyzer::isType,
+		&Analyzer::isOperatorVal,
+		&Analyzer::isPrecisionInt,
+		&Analyzer::isPrecisionFloat,
 		&Analyzer::isOpeningPar,
 		&Analyzer::isClosingPar,
 		&Analyzer::isNaturalVal,
@@ -15,26 +18,21 @@ void				Analyzer::analyzer(std::list<Token> * tkns)
 
 	for (it = tkns->begin(); it != tkns->end(); ++it)
 	{
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			if (tab[i](*it))
 				break;
 		}
 		if ((*it).getType() == UNKNOWN)
-		{
-		//	throw new AnalyzerExcep::AnalyzerExcep(""); TODO AnalyzerExcep
-			return;
-		}
+			throw AnalyzerExcept("Instruction Unknown.");
 	}
 }
 
 bool				Analyzer::isOperator(Token & tkn)
 {
-	std::string		tab[11] = {
-		"push",
+	std::string		tab[9] = {
 		"pop",
 		"dump",
-		"assert",
 		"add",
 		"sub",
 		"mul",
@@ -44,7 +42,7 @@ bool				Analyzer::isOperator(Token & tkn)
 		"exit"
 	};
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		if (tkn.getValue().compare(tab[i]) == 0)
 		{
@@ -55,21 +53,55 @@ bool				Analyzer::isOperator(Token & tkn)
 	return 0;
 }
 
-bool				Analyzer::isType(Token & tkn)
+bool				Analyzer::isOperatorVal(Token & tkn)
 {
-	std::string		tab[5] = {
+	std::string		tab[2] = {
+		"push",
+		"assert",
+	};
+
+	for (int i = 0; i < 2; i++)
+	{
+		if (tkn.getValue().compare(tab[i]) == 0)
+		{
+			tkn.setType(OPERATOR_VAL);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool				Analyzer::isPrecisionInt(Token & tkn)
+{
+	std::string		tab[3] = {
 		"int8",
 		"int16",
-		"int32",
+		"int32"
+	};
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (tkn.getValue().compare(tab[i]) == 0)
+		{
+			tkn.setType(PRECISION_INT);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool				Analyzer::isPrecisionFloat(Token & tkn)
+{
+	std::string		tab[2] = {
 		"float",
 		"double"
 	};
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		if (tkn.getValue().compare(tab[i]) == 0)
 		{
-			tkn.setType(TYPE);
+			tkn.setType(PRECISION_INT);
 			return 1;
 		}
 	}

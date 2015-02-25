@@ -12,7 +12,7 @@ int				main()
 	for(std::list<Token>::const_iterator it = tkns->begin(); it != tkns->end(); ++it)
 	{
 		if ((*it).getValue().compare("\n") == 0)
-			std::cout << "{\\n | Separator}\n";
+			std::cout << "{\\n | Separator | " << (*it).getLineNum() << "}\n";
 		else
 			std::cout << "{" << *it << "}";
 	}

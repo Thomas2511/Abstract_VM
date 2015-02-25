@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Token.hpp"
 
-Token::Token( void ) : _value(""), _type(UNKNOWN)
+Token::Token( void ) : _value(""), _type(UNKNOWN), _lineNum(0)
 {
 }
 
@@ -18,6 +18,7 @@ Token &						Token::operator=(Token const & rhs)
 {
 	this->_value = rhs._value;
 	this->_type = rhs._type;
+	this->_lineNum = rhs._lineNum;
 	return *this;
 }
 
@@ -31,6 +32,11 @@ tokenType					Token::getType( void ) const
 	return this->_type;
 }
 
+int							Token::getLineNum( void ) const
+{
+	return this->_lineNum;
+}
+
 void						Token::setValue(std::string const val)
 {
 	this->_value = val;
@@ -39,6 +45,11 @@ void						Token::setValue(std::string const val)
 void						Token::setType(tokenType const tkn)
 {
 	this->_type = tkn;
+}
+
+void						Token::setLineNum(int const nb)
+{
+	this->_lineNum = nb;
 }
 
 std::ostream &				operator<<(std::ostream & o, Token const & rhs)
@@ -50,8 +61,16 @@ std::ostream &				operator<<(std::ostream & o, Token const & rhs)
 			o << "Operator";
 			break;
 
-		case TYPE:
-			o << "Type";
+		case OPERATOR_VAL:
+			o << "Operator and Value";
+			break;
+
+		case PRECISION_INT:
+			o << "Precision: Integer";
+			break;
+
+		case PRECISION_FLOAT:
+			o << "Precision: Float";
 			break;
 
 		case OPENING_PAR:
@@ -78,5 +97,6 @@ std::ostream &				operator<<(std::ostream & o, Token const & rhs)
 			o << "Unknown";
 			break;
 	}
+	o << " | " << rhs.getLineNum();
 	return o;
 }
