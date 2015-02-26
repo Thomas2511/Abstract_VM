@@ -3,60 +3,46 @@
 
 # include <list>
 # include <iostream>
+# include <sstream>
 # include <exception>
 # include "Token.hpp"
 
 class Parser
 {
 	public:
-
 		class ParserExcept : public std::exception
 		{
 			public:
-				ParserExcept( void )
-				{
-				}
-				ParserExcept(std::string error) : _errorMessage(error)
-				{
-				}
-				ParserExcept(ParserExcept const & src)
-				{
-				}
-				~ParserExcept( void ) throw()
-				{
-				}
-				ParserExcept &			operator=(ParserExcept const & rhs)
-				{
-					this->_errorMessage = rhs._errorMessage;
-					return *this;
-				}
-				virtual const char *	what() const throw()
-				{
-					return this->_errorMessage.c_str();
-				}
+				ParserExcept( void );
+				ParserExcept(std::string error, size_t line);
+				ParserExcept(ParserExcept const & src);
+				~ParserExcept( void ) throw();
+				ParserExcept &			operator=(ParserExcept const & rhs);
+				virtual const char *	what() const throw();
 
 			private:
 				std::string				_errorMessage;
+				size_t					_lineNum;
 		};
 
 		static bool			parse(std::list<Token> * tkns);
-		static bool			isInstr(std::list<Token>::const_iterator * it);
-		static bool			isOperator(std::list<Token>::const_iterator * it);
-		static bool			isOperatorVal(std::list<Token>::const_iterator * it);
-		static bool			isValue(std::list<Token>::const_iterator * it);
-		static bool			isPrecisionInt(std::list<Token>::const_iterator * it);
-		static bool			isPrecisionFloat(std::list<Token>::const_iterator * it);
-		static bool			isOpeningPar(std::list<Token>::const_iterator * it);
-		static bool			isClosingPar(std::list<Token>::const_iterator * it);
-		static bool			isNaturalVal(std::list<Token>::const_iterator * it);
-		static bool			isFloatingVal(std::list<Token>::const_iterator * it);
-		static bool			isSeparator(std::list<Token>::const_iterator * it);
 
 	private:
 		Parser( void );
 		Parser(Parser const & src);
 		~Parser( void );
-		Parser &	operator=(Parser const & rhs);
+		Parser &			operator=(Parser const & rhs);
+		static bool			_isInstr(std::list<Token>::const_iterator * it);
+		static bool			_isOperator(std::list<Token>::const_iterator * it);
+		static bool			_isOperatorVal(std::list<Token>::const_iterator * it);
+		static bool			_isValue(std::list<Token>::const_iterator * it);
+		static bool			_isPrecisionInt(std::list<Token>::const_iterator * it);
+		static bool			_isPrecisionFloat(std::list<Token>::const_iterator * it);
+		static bool			_isOpeningPar(std::list<Token>::const_iterator * it);
+		static bool			_isClosingPar(std::list<Token>::const_iterator * it);
+		static bool			_isNaturalVal(std::list<Token>::const_iterator * it);
+		static bool			_isFloatingVal(std::list<Token>::const_iterator * it);
+		static bool			_isSeparator(std::list<Token>::const_iterator * it);
 };
 
 #endif /* PARSER_HPP */

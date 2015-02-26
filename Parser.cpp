@@ -1,49 +1,64 @@
 #include "Parser.hpp"
 
+Parser::ParserExcept::ParserExcept( void )
+{
+}
+
+Parser::ParserExcept::ParserExcept(std::string error, size_t line) : _errorMessage(error), _lineNum(line)
+{
+}
+
+Parser::ParserExcept::ParserExcept(Parser::ParserExcept const & src)
+{
+	*this = src;
+}
+
+Parser::ParserExcept::~ParserExcept( void ) throw()
+{
+}
+
+Parser::ParserExcept &		Parser::ParserExcept::operator=(Parser::ParserExcept const & rhs)
+{
+	this->_errorMessage = rhs._errorMessage;
+	this->_lineNum = rhs._lineNum;
+	return *this;
+}
+
+const char *				Parser::ParserExcept::what() const throw()
+{
+	std::stringstream		ss;
+
+	ss << "Line " << this->_lineNum << ": Error : " << this->_errorMessage;
+	return ss.str().c_str();
+}
+
 bool		Parser::parse(std::list<Token> * tokens)
 {
 	std::list<Token>::const_iterator	it = tokens->begin();
 
-	try
-	{
-		if (!Parser::isInstr(&it))
+	while ((*it).getType() == SEPARATOR)
+		++it;
+	if (!Parser::_isInstr(&it))
+		return false;
+	while ((*it).getType() != END_OF_FILE)
+		if (!Parser::_isSeparator(&it) || !Parser::_isInstr(&it))
 			return false;
-		while (it != tokens->end())
-		{
-			if (!Parser::isSeparator(&it) || !Parser::isInstr(&it))
-				return false;
-		}
-	}
-	catch (const Parser::ParserExcept & e)
-	{
-		std::cerr << e.what() << std::endl;
-		// TODO : quitter le programme
-	}
-	catch ( ... )
-	{
-		std::cerr << "???" << std::endl;
-		// TODO : panic
-	}
+	return true;
 }
 
-bool		Parser::isInstr(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isInstr(std::list<Token>::const_iterator * ptr_it)
 {
-	if (Parser::isOperator(ptr_it))
-	{
-		++(*ptr_it);
+	if ((*(*ptr_it)).getType() == END_OF_FILE)
 		return true;
-	}
-	if (Parser::isOperatorVal(ptr_it))
-	{
-		++(*ptr_it);
-		return (Parser::isValue(ptr_it));
-	}
-	// TODO : exception : instruction (push | pop | dump | assert | add | sub | mul | div | mod | print | exit) expected
-	return false;
+	if (Parser::_isOperator(ptr_it))
+		return true;
+	if (Parser::_isOperatorVal(ptr_it))
+		return (Parser::_isValue(ptr_it));
+	throw Parser::ParserExcept("Parser Exception : instruction (push | pop | dump | assert | add | sub | mul | div | mod | print | exit) expected.", (*(*ptr_it)).getLineNum());
 }
 
 
-bool		Parser::isOperator(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isOperator(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == OPERATOR)
 	{
@@ -54,7 +69,7 @@ bool		Parser::isOperator(std::list<Token>::const_iterator * ptr_it)
 }
 
 
-bool		Parser::isOperatorVal(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isOperatorVal(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == OPERATOR_VAL)
 	{
@@ -64,23 +79,16 @@ bool		Parser::isOperatorVal(std::list<Token>::const_iterator * ptr_it)
 	return false;
 }
 
-bool		Parser::isValue(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isValue(std::list<Token>::const_iterator * ptr_it)
 {
-	if (Parser::isPrecisionInt(ptr_it))
-	{
-		++(*ptr_it);
-		return (Parser::isOpeningPar(ptr_it) || Parser::isNaturalVal(ptr_it) || Parser::isClosingPar(ptr_it));
-	}
-	if (Parser::isPrecisionFloat(ptr_it))
-	{
-		++(*ptr_it);
-		return (Parser::isOpeningPar(ptr_it) || Parser::isFloatingVal(ptr_it) || Parser::isClosingPar(ptr_it));
-	}
-	// TODO : exception : precision (int8 | int16 | int32 | float | double) expected
-	return false;
+	if (Parser::_isPrecisionInt(ptr_it))
+		return (Parser::_isOpeningPar(ptr_it) && Parser::_isNaturalVal(ptr_it) && Parser::_isClosingPar(ptr_it));
+	if (Parser::_isPrecisionFloat(ptr_it))
+		return (Parser::_isOpeningPar(ptr_it) && Parser::_isFloatingVal(ptr_it) && Parser::_isClosingPar(ptr_it));
+	throw Parser::ParserExcept("Parser Exception : precision (int8 | int16 | int32 | float | double) expected.", (*(*ptr_it)).getLineNum());
 }
 
-bool		Parser::isPrecisionInt(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isPrecisionInt(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == PRECISION_INT)
 	{
@@ -90,7 +98,7 @@ bool		Parser::isPrecisionInt(std::list<Token>::const_iterator * ptr_it)
 	return false;
 }
 
-bool		Parser::isPrecisionFloat(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isPrecisionFloat(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == PRECISION_FLOAT)
 	{
@@ -100,57 +108,56 @@ bool		Parser::isPrecisionFloat(std::list<Token>::const_iterator * ptr_it)
 	return false;
 }
 
-bool		Parser::isOpeningPar(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isOpeningPar(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == OPENING_PAR)
 	{
 		++(*ptr_it);
 		return true;
 	}
-	// TODO : exception : left parenthesis expected
-	return false;
+	throw Parser::ParserExcept("Parser Exception : Opening Parenthesis expected.", (*(*ptr_it)).getLineNum());
 }
 
-bool		Parser::isClosingPar(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isClosingPar(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == CLOSING_PAR)
 	{
 		++(*ptr_it);
 		return true;
 	}
-	// TODO : exception : right parenthesis expected
-	return false;
+	throw Parser::ParserExcept("Parser Exception : Closing Parenthesis expected.", (*(*ptr_it)).getLineNum());
 }
 
-bool		Parser::isNaturalVal(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isNaturalVal(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == NATURAL_VAL)
 	{
 		++(*ptr_it);
 		return true;
 	}
-	// TODO : exception : natural value expected
-	return false;
+	throw Parser::ParserExcept("Parser Exception : Natural Value expected.", (*(*ptr_it)).getLineNum());
 }
 
-bool		Parser::isFloatingVal(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isFloatingVal(std::list<Token>::const_iterator * ptr_it)
 {
 	if ((*(*ptr_it)).getType() == FLOATING_VAL)
 	{
 		++(*ptr_it);
 		return true;
 	}
-	// TODO : exception : floating value expected
-	return false;
+	throw Parser::ParserExcept("Parser Exception : Floating Value expected.", (*(*ptr_it)).getLineNum());
 }
 
-bool		Parser::isSeparator(std::list<Token>::const_iterator * ptr_it)
+bool		Parser::_isSeparator(std::list<Token>::const_iterator * ptr_it)
 {
-	if ((*(*ptr_it)).getType() == SEPARATOR)
+	int		i = 0;
+
+	while ((*(*ptr_it)).getType() == SEPARATOR)
 	{
 		++(*ptr_it);
-		return true;
+		i++;
 	}
-	// TODO : exception : separator expected
-	return false;
+	if (i > 0)
+		return true;
+	throw Parser::ParserExcept("Parser Exception : Separator expected.", (*(*ptr_it)).getLineNum());
 }

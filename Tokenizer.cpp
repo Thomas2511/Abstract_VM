@@ -9,7 +9,7 @@ std::list<Token> *				Tokenizer::tokenize(std::string const & content)
 	std::string					value;
 	std::stringstream			ss;
 	Token						tkn;
-	int							lineNum = 1;
+	int							lineNum = 0;
 
 	for (unsigned int i = 0; i < content.size(); i++)
 	{
@@ -31,14 +31,14 @@ std::list<Token> *				Tokenizer::tokenize(std::string const & content)
 			ret->push_back(tkn);
 			ss.str(std::string());
 		}
-		if (found == std::string::npos)
-			break;
 		if (content[found] == ';')
 		{
 			found = content.find_first_of("\n", found);
 			if (content[found] == '\n')
 				lineNum++;
 		}
+		if (found == std::string::npos)
+			break;
 		i = found++;
 	}
 

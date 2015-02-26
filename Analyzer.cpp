@@ -1,7 +1,38 @@
 #include "Analyzer.hpp"
 #include "AnalyzerExcept.hpp"
 
-void				Analyzer::analyzer(std::list<Token> * tkns)
+Analyzer::AnalyzerExcept::AnalyzerExcept( void )
+{
+}
+
+Analyzer::AnalyzerExcept::AnalyzerExcept(std::string error, int line) : _errorMessage(error), _lineNum(line)
+{
+}
+
+Analyzer::AnalyzerExcept::AnalyzerExcept(AnalyzerExcept const & src)
+{
+	*this = src;
+}
+
+Analyzer::AnalyzerExcept::~AnalyzerExcept( void ) throw()
+{
+}
+
+Analyzer::AnalyzerExcept &		Analyzer::AnalyzerExcept::operator=(AnalyzerExcept const & rhs)
+{
+	this->_errorMessage = rhs._errorMessage;
+	return *this;
+}
+
+const char *		Analyzer::AnalyzerExcept::what() const throw()
+{
+	std::stringstream		ss;
+
+	ss << "Line " << this->_lineNum << ": Error : " << this->_errorMessage;
+	return ss.str().c_str();
+}
+
+bool				Analyzer::analyzer(std::list<Token> * tkns)
 {
 	f				tab[] = {
 		&Analyzer::isOperator,
@@ -15,7 +46,6 @@ void				Analyzer::analyzer(std::list<Token> * tkns)
 		&Analyzer::isSeparator
 	};
 	std::list<Token>::iterator		it;
-
 	for (it = tkns->begin(); it != tkns->end(); ++it)
 	{
 		for (int i = 0; i < 9; i++)
@@ -24,8 +54,11 @@ void				Analyzer::analyzer(std::list<Token> * tkns)
 				break;
 		}
 		if ((*it).getType() == UNKNOWN)
-			throw AnalyzerExcept("Instruction Unknown.");
+			throw AnalyzerExcept("Instruction Unknown.", (*it).getLineNum());
 	}
+	int nb = tkns->back().getLineNum();
+	tkns->push_back(Token(END_OF_FILE, nb));
+	return true;
 }
 
 bool				Analyzer::isOperator(Token & tkn)
@@ -101,7 +134,7 @@ bool				Analyzer::isPrecisionFloat(Token & tkn)
 	{
 		if (tkn.getValue().compare(tab[i]) == 0)
 		{
-			tkn.setType(PRECISION_INT);
+			tkn.setType(PRECISION_FLOAT);
 			return 1;
 		}
 	}

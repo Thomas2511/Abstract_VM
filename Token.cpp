@@ -1,13 +1,17 @@
 #include <iostream>
 #include "Token.hpp"
 
-Token::Token( void ) : _value(""), _type(UNKNOWN), _lineNum(0)
+Token::Token( void ) : _value(""), _type(UNKNOWN), _lineNum(1)
 {
 }
 
 Token::Token(Token const & src)
 {
 	*this = src;
+}
+
+Token::Token(tokenType type, int lineNum) : _value(""), _type(type), _lineNum(lineNum)
+{
 }
 
 Token::~Token( void )
@@ -91,6 +95,10 @@ std::ostream &				operator<<(std::ostream & o, Token const & rhs)
 
 		case SEPARATOR:
 			o << "Separator";
+			break;
+
+		case END_OF_FILE:
+			o << "End of file";
 			break;
 
 		default:

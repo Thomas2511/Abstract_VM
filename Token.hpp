@@ -13,7 +13,8 @@ enum	tokenType {
 	CLOSING_PAR,
 	NATURAL_VAL,
 	FLOATING_VAL,
-	SEPARATOR
+	SEPARATOR,
+	END_OF_FILE
 };
 
 class Token
@@ -21,6 +22,7 @@ class Token
 	public:
 		Token( void );
 		Token(Token const & src);
+		Token(tokenType type, int lineNum);
 		~Token( void );
 		Token &					operator=(Token const & rhs);
 
