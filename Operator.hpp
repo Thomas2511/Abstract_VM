@@ -24,6 +24,16 @@ enum	Command
 class Operator
 {
 	public:
+		class EmptyStackException : public std::exception //TODO change to prognameException
+		{
+			public:
+				virtual const char * what() const throw();
+		};
+		class AssertErrorException : public std::exception //TODO change to prognameException
+		{
+			public:
+				virtual const char * what() const throw();
+		};
 		Operator( void );
 		Operator(Command cmd, int line);
 		Operator(Command cmd, eOperandType op, int line, std::string value);
@@ -49,5 +59,4 @@ class Operator
 		void					_exit(std::list<const IOperand *> lst);
 };
 typedef void (Operator::*fun)(std::list<const IOperand *> lst);
-# include "Int8.hpp"
 #endif /* OPERATOR_HPP */
