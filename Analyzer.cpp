@@ -1,35 +1,8 @@
 #include "Analyzer.hpp"
-#include "AnalyzerExcept.hpp"
 
-Analyzer::AnalyzerExcept::AnalyzerExcept( void )
+const char *		Analyzer::UnknownInstructionException::what() const throw()
 {
-}
-
-Analyzer::AnalyzerExcept::AnalyzerExcept(std::string error, int line) : _errorMessage(error), _lineNum(line)
-{
-}
-
-Analyzer::AnalyzerExcept::AnalyzerExcept(AnalyzerExcept const & src)
-{
-	*this = src;
-}
-
-Analyzer::AnalyzerExcept::~AnalyzerExcept( void ) throw()
-{
-}
-
-Analyzer::AnalyzerExcept &		Analyzer::AnalyzerExcept::operator=(AnalyzerExcept const & rhs)
-{
-	this->_errorMessage = rhs._errorMessage;
-	return *this;
-}
-
-const char *		Analyzer::AnalyzerExcept::what() const throw()
-{
-	std::stringstream		ss;
-
-	ss << "Line " << this->_lineNum << ": Error : " << this->_errorMessage;
-	return ss.str().c_str();
+	return "Unknown Instruction";
 }
 
 bool				Analyzer::analyzer(std::list<Token> * tkns)
@@ -54,7 +27,7 @@ bool				Analyzer::analyzer(std::list<Token> * tkns)
 				break;
 		}
 		if ((*it).getType() == UNKNOWN)
-			throw AnalyzerExcept("Instruction Unknown.", (*it).getLineNum());
+			throw Analyzer::UnknownInstructionException::UnknownInstructionException();
 	}
 	int nb = tkns->back().getLineNum();
 	tkns->push_back(Token(END_OF_FILE, nb));

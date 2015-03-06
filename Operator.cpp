@@ -1,5 +1,15 @@
 #include "Operator.hpp"
 
+const char *			Operator::EmptyStackException::what() const throw()
+{
+	return "Empty Stack";
+}
+
+const char *			Operator::AssertErrorException::what() const throw()
+{
+	return "Assert Error";
+}
+
 Operator::Operator(Command cmd, int line) : _cmd(cmd), _line(line)
 {
 }
@@ -34,8 +44,8 @@ void					Operator::_push(std::list<const IOperand *> lst)
 
 void					Operator::_pop(std::list<const IOperand *> lst)
 {
-	/*if (lst.size() == 0)
-		TODO throw Operator::OpeException::emptyStack();*/
+	if (lst.size() == 0)
+		throw Operator::EmptyStackException::EmptyStackException();
 	lst.pop_front();
 }
 
@@ -49,8 +59,8 @@ void					Operator::_dump(std::list<const IOperand *> lst)
 
 void					Operator::_assert(std::list<const IOperand *> lst)
 {
-	/*if (lst.front()->toString().compare(this->_value))
-		TODO throw Operator::OpeException::assertError()*/
+	if (lst.front()->toString().compare(this->_value))
+		throw Operator::AssertErrorException::AssertErrorException();
 }
 
 void					Operator::_add(std::list<const IOperand *> lst)

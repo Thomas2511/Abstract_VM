@@ -1,7 +1,8 @@
 #include "Calculator.hpp"
 
-Calculator::~Calculator( void )
+const char *			Calculator::FloatingPointException::what() const throw()
 {
+	return "Floating Point";
 }
 
 IOperand const *		Calculator::add(IOperand const & lhs, IOperand const & rhs)

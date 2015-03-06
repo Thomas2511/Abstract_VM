@@ -9,19 +9,10 @@
 class Analyzer
 {
 	public:
-		class AnalyzerExcept : public std::exception
+		class UnknownInstructionException : public std::exception //TODO change to prognameException
 		{
 			public:
-				AnalyzerExcept( void );
-				AnalyzerExcept(std::string error, int line);
-				AnalyzerExcept(AnalyzerExcept const & src);
-				~AnalyzerExcept( void ) throw();
-				AnalyzerExcept &				operator=(AnalyzerExcept const & rhs);
-				virtual const char *			what() const throw();
-
-			private:
-				std::string						_errorMessage;
-				int								_lineNum;
+				virtual const char * what() const throw();
 		};
 
 		static bool				analyzer(std::list<Token> * tkns);

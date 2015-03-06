@@ -1,5 +1,15 @@
 #include "OperandFactory.hpp"
 
+const char *	OperandFactory::OperandUnderflowException::what() const throw()
+{
+	return "Operand Underflow";
+}
+
+const char *	OperandFactory::OperandOverflowException::what() const throw()
+{
+	return "Operand Overflow";
+}
+
 IOperand const * OperandFactory::createOperand( eOperandType type, std::string const & value ) const
 {
 	f tab[] =
