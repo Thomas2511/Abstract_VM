@@ -10,11 +10,9 @@
 class Calculator
 {
 	public:
-		class FloatingPointException : public std::exception
+		class FloatingPointException : public std::exception //TODO change to prognameException
 		{
 			public:
-				FloatingPointException( void );
-				~FloatingPointException( void ) throw();
 				virtual const char *			what() const throw();
 		};
 		virtual ~Calculator( void );

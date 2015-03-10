@@ -45,7 +45,7 @@ int							main(int ac, char ** av)
 		return 1;
 		// TODO : quitter le programme
 	}
-	catch (const Analyzer::AnalyzerExcept & e)
+	catch (const Analyzer::UnknownInstructionException & e)
 	{
 		std::cerr << e.what() << std::endl;
 		return 1;

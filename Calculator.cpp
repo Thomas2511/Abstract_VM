@@ -15,7 +15,7 @@ IOperand const *		Calculator::add(IOperand const & lhs, IOperand const & rhs)
 
 	lv = atof(lhs.toString().c_str());
 	rv = atof(rhs.toString().c_str());
-	type = lhs.getPrecision() > rhs.getPrecision() ? rhs.getType() : lhs.getType();
+	type = lhs.getPrecision() < rhs.getPrecision() ? rhs.getType() : lhs.getType();
 	lv = lv + rv;
 	ss << lv;
 	return (fact.createOperand(type, ss.str()));
@@ -31,7 +31,7 @@ IOperand const *		Calculator::sub(IOperand const & lhs, IOperand const & rhs)
 
 	lv = atof(lhs.toString().c_str());
 	rv = atof(rhs.toString().c_str());
-	type = lhs.getPrecision() > rhs.getPrecision() ? rhs.getType() : lhs.getType();
+	type = lhs.getPrecision() < rhs.getPrecision() ? rhs.getType() : lhs.getType();
 	lv = lv - rv;
 	ss << lv;
 	return (fact.createOperand(type, ss.str()));
@@ -47,7 +47,7 @@ IOperand const *		Calculator::mul(IOperand const & lhs, IOperand const & rhs)
 
 	lv = atof(lhs.toString().c_str());
 	rv = atof(rhs.toString().c_str());
-	type = lhs.getPrecision() > rhs.getPrecision() ? rhs.getType() : lhs.getType();
+	type = lhs.getPrecision() < rhs.getPrecision() ? rhs.getType() : lhs.getType();
 	lv = lv * rv;
 	ss << lv;
 	return (fact.createOperand(type, ss.str()));
@@ -63,9 +63,9 @@ IOperand const *		Calculator::div(IOperand const & lhs, IOperand const & rhs)
 
 	lv = atof(lhs.toString().c_str());
 	rv = atof(rhs.toString().c_str());
-	type = lhs.getPrecision() > rhs.getPrecision() ? rhs.getType() : lhs.getType();
+	type = lhs.getPrecision() < rhs.getPrecision() ? rhs.getType() : lhs.getType();
 	if (rv == 0)
-		throw Calculator::FloatingPointException::FloatingPointException();
+		throw Calculator::FloatingPointException();
 	else
 		lv = lv / rv;
 	ss << lv;
@@ -82,9 +82,9 @@ IOperand const *		Calculator::mod(IOperand const & lhs, IOperand const & rhs)
 
 	lv = atof(lhs.toString().c_str());
 	rv = atof(rhs.toString().c_str());
-	type = lhs.getPrecision() > rhs.getPrecision() ? rhs.getType() : lhs.getType();
+	type = lhs.getPrecision() < rhs.getPrecision() ? rhs.getType() : lhs.getType();
 	if (rv == 0)
-		throw Calculator::FloatingPointException::FloatingPointException();
+		throw Calculator::FloatingPointException();
 	else
 		lv = lv / rv;
 	ss << lv;
