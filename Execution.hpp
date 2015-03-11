@@ -8,11 +8,11 @@ class Execution
 {
 	public:
 		~Execution( void );
-		std::list<Operator *>		createExecutionList(std::list<Token> tkns);
+		static std::list<Operator *>		createExecutionList(std::list<Token> tkns);
 
 	private:
-		Command						_checkCommand(Token tkn);
-		eOperandType				_checkOperand(Token tkn);
+		static command						_checkCommand(Token tkn);
+		static eOperandType					_checkOperand(Token tkn);
 };
 
 #endif /* EXECUTION_HPP */

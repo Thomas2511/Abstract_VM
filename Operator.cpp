@@ -198,5 +198,6 @@ bool					Operator::_print(std::list<const IOperand *> & lst)
 
 bool					Operator::_exit(std::list<const IOperand *> & lst)
 {
+	static_cast<void>(lst);
 	return (true);
 }

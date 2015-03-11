@@ -6,6 +6,7 @@
 # include <exception>
 # include <limits>
 # include <cstdlib>
+# include <math.h>
 # include "IOperand.hpp"
 # include "Int8.hpp"
 # include "Int16.hpp"

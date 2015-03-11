@@ -7,7 +7,7 @@ const char *		Analyzer::UnknownInstructionException::what() const throw()
 
 bool				Analyzer::analyzer(std::list<Token> * tkns)
 {
-	f				tab[] = {
+	func				tab[] = {
 		&Analyzer::isOperator,
 		&Analyzer::isOperatorVal,
 		&Analyzer::isPrecisionInt,

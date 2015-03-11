@@ -33,6 +33,6 @@ class Analyzer
 		Analyzer &				operator=(Analyzer const & rhs);
 };
 
-typedef bool					(*f)(Token & tkn);
+typedef bool					(*func)(Token & tkn);
 
 #endif /* ANALYZER_HPP */

@@ -3,6 +3,8 @@
 #include		"Tokenizer.hpp"
 #include		"Analyzer.hpp"
 #include		"Parser.hpp"
+#include		"Execution.hpp"
+#include		"Operator.hpp"
 
 int							main(int ac, char ** av)
 {
@@ -38,24 +40,48 @@ int							main(int ac, char ** av)
 	{
 		Analyzer::analyzer(tkns);
 		Parser::parse(tkns);
+
+		std::list<Operator *>				exec;
+		std::list<Operator *>::iterator		it;
+		std::list<const IOperand *>			lst;
+		bool								exit = false;
+
+		exec = Execution::createExecutionList(*tkns);
+		for (it = exec.begin(); it != exec.end(); ++it)
+		{
+			exit = ((*it)->callCommand(lst));
+			if (exit)
+				break ;
+		}
+		if (!exit)
+			std::cerr << "Exit command missing at end of program." << std::endl;
 	}
-	catch (const Parser::ParserExcept & e)
+	catch (const Parser::InstructionException & e)
 	{
-		std::cerr << e.what() << std::endl;
-		return 1;
-		// TODO : quitter le programme
 	}
-	catch (const Analyzer::UnknownInstructionException & e)
+	catch (const Parser::PrecisionException & e)
 	{
-		std::cerr << e.what() << std::endl;
-		return 1;
-		// TODO : quitter le programme
 	}
-	catch ( ... )
+	catch (const Parser::LeftParenthesisException & e)
 	{
-		std::cerr << "???" << std::endl;
-		return 1;
-		// TODO : panic
+	}
+	catch (const Parser::RightParenthesisException & e)
+	{
+	}
+	catch (const Parser::NaturalValueException & e)
+	{
+	}
+	catch (const Parser::FloatingValueException & e)
+	{
+	}
+	catch (const Parser::SeparatorException & e)
+	{
+	}
+	catch (const Operator::EmptyStackException & e)
+	{
+	}
+	catch (const Operator::AssertErrorException & e)
+	{
 	}
 	for(std::list<Token>::const_iterator it = tkns->begin(); it != tkns->end(); ++it)
 	{

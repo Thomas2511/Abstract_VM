@@ -10,21 +10,44 @@
 class Parser
 {
 	public:
-		class ParserExcept : public std::exception
+		class ParserException : public std::exception
+		{
+		};
+		class InstructionException : public ParserException
 		{
 			public:
-				ParserExcept( void );
-				ParserExcept(std::string error, size_t line);
-				ParserExcept(ParserExcept const & src);
-				~ParserExcept( void ) throw();
-				ParserExcept &			operator=(ParserExcept const & rhs);
 				virtual const char *	what() const throw();
-
-			private:
-				std::string				_errorMessage;
-				size_t					_lineNum;
 		};
-
+		class PrecisionException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
+		class LeftParenthesisException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
+		class RightParenthesisException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
+		class NaturalValueException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
+		class FloatingValueException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
+		class SeparatorException : public ParserException
+		{
+			public:
+				virtual const char *	what() const throw();
+		};
 		static bool			parse(std::list<Token> * tkns);
 
 	private:
@@ -32,14 +55,15 @@ class Parser
 		Parser(Parser const & src);
 		~Parser( void );
 		Parser &			operator=(Parser const & rhs);
+
 		static bool			_isInstr(std::list<Token>::const_iterator * it);
 		static bool			_isOperator(std::list<Token>::const_iterator * it);
 		static bool			_isOperatorVal(std::list<Token>::const_iterator * it);
 		static bool			_isValue(std::list<Token>::const_iterator * it);
 		static bool			_isPrecisionInt(std::list<Token>::const_iterator * it);
 		static bool			_isPrecisionFloat(std::list<Token>::const_iterator * it);
-		static bool			_isOpeningPar(std::list<Token>::const_iterator * it);
-		static bool			_isClosingPar(std::list<Token>::const_iterator * it);
+		static bool			_isLeftParenthesis(std::list<Token>::const_iterator * it);
+		static bool			_isRightParenthesis(std::list<Token>::const_iterator * it);
 		static bool			_isNaturalVal(std::list<Token>::const_iterator * it);
 		static bool			_isFloatingVal(std::list<Token>::const_iterator * it);
 		static bool			_isSeparator(std::list<Token>::const_iterator * it);

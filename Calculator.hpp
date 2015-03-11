@@ -1,6 +1,7 @@
 #ifndef CALCULATOR_HPP
 # define CALCULATOR_HPP
 
+# include <math.h>
 # include <sstream>
 # include <cstdlib>
 # include <exception>
@@ -10,11 +11,12 @@
 class Calculator
 {
 	public:
-		class FloatingPointException : public std::exception //TODO change to prognameException
+		class FloatingPointException : public std::exception
 		{
 			public:
 				virtual const char *			what() const throw();
 		};
+		Calculator( void );
 		virtual ~Calculator( void );
 
 		static IOperand const *		add(IOperand const & lhs, IOperand const & rhs);

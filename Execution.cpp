@@ -28,7 +28,7 @@ std::list<Operator *>			Execution::createExecutionList(std::list<Token> tkns)
 	return op;
 }
 
-Command							Execution::_checkCommand(Token tkn)
+command							Execution::_checkCommand(Token tkn)
 {
 	std::string					tab[] =
 	{
@@ -48,9 +48,9 @@ Command							Execution::_checkCommand(Token tkn)
 	for (int i = 0; i < 11; i++)
 	{
 		if (tkn.getValue().compare(tab[i]) == 0)
-			return (static_cast<Command>(i));
+			return (static_cast<command>(i));
 	}
-	return static_cast<Command>(0);
+	return static_cast<command>(0);
 }
 
 eOperandType					Execution::_checkOperand(Token tkn)

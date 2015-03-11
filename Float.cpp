@@ -36,37 +36,27 @@ eOperandType		Float::getType( void ) const
 
 IOperand const *	Float::operator+( IOperand const & rhs ) const
 {
-	Calculator		calc;
-
-	return (calc.add(*this, rhs));
+	return (Calculator::add(*this, rhs));
 }
 
 IOperand const *	Float::operator-( IOperand const & rhs ) const
 {
-	Calculator		calc;
-
-	return (calc.sub(*this, rhs));
+	return (Calculator::sub(*this, rhs));
 }
 
 IOperand const *	Float::operator*( IOperand const & rhs ) const
 {
-	Calculator		calc;
-
-	return (calc.mul(*this, rhs));
+	return (Calculator::mul(*this, rhs));
 }
 
 IOperand const *	Float::operator/( IOperand const & rhs ) const
 {
-	Calculator		calc;
-
-	return (calc.div(*this, rhs));
+	return (Calculator::div(*this, rhs));
 }
 
 IOperand const *	Float::operator%( IOperand const & rhs ) const
 {
-	Calculator		calc;
-
-	return (calc.mod(*this, rhs));
+	return (Calculator::mod(*this, rhs));
 }
 
 std::string const & Float::toString( void ) const
