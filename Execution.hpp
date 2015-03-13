@@ -8,7 +8,7 @@ class Execution
 {
 	public:
 		~Execution( void );
-		static std::list<Operator *>		createExecutionList(std::list<Token> tkns);
+		static std::list<Operator *>		createExecutionList(std::list<Token> & tkns);
 
 	private:
 		static command						_checkCommand(Token tkn);

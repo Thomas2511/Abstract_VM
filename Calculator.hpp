@@ -1,7 +1,7 @@
 #ifndef CALCULATOR_HPP
 # define CALCULATOR_HPP
 
-# include <math.h>
+# include <cmath>
 # include <sstream>
 # include <cstdlib>
 # include <exception>

@@ -8,14 +8,24 @@
 
 int							main(int ac, char ** av)
 {
-	std::string				s("; ------------\n; exemple.avm -\n; ------------\n\npush int32(42)\npush int32(33)\n\nadd\n\npush float(44.55)\n\nmul\n\npush double(42.42)\npush int32(42)\n\ndump\n\npop\n\nassert double(42.42)\n\nexit");
 	std::string				line;
 	std::stringstream		ss;
 	std::ifstream			file(av[1]);
 	std::list<Token> *		tkns;
 
 	if (ac == 1)
-		tkns = Tokenizer::tokenize(s);
+	{
+		while (std::getline(std::cin, line))
+		{
+			if (!line.compare(";;"))
+			{
+				ss << "exit" << std::endl;
+				break ;
+			}
+			ss << line << std::endl;
+		}
+		std::cout << ss.str();
+	}
 	else if (ac == 2)
 	{
 		if (file.is_open())
@@ -23,7 +33,6 @@ int							main(int ac, char ** av)
 			while(std::getline(file, line))
 				ss << line << std::endl;
 			file.close();
-			tkns = Tokenizer::tokenize(ss.str());
 		}
 		else
 		{
@@ -38,23 +47,41 @@ int							main(int ac, char ** av)
 	}
 	try
 	{
-		Analyzer::analyzer(tkns);
-		Parser::parse(tkns);
+		tkns = Tokenizer::tokenize(ss.str());
+	/*	Analyzer::analyzer(tkns);
+		Parser::parse(tkns);*/
+
+		for(std::list<Token>::iterator tk = tkns->begin(); tk != tkns->end(); ++tk)
+		{
+			std::cout << (*tk).getValue() << std::endl;
+		}
 
 		std::list<Operator *>				exec;
 		std::list<Operator *>::iterator		it;
 		std::list<const IOperand *>			lst;
+		std::list<const IOperand *>::iterator	it2;
 		bool								exit = false;
 
 		exec = Execution::createExecutionList(*tkns);
 		for (it = exec.begin(); it != exec.end(); ++it)
 		{
+			std::cout << "-----------------------" << std::endl;
+			std::cout << (*it)->getValue() << std::endl;
 			exit = ((*it)->callCommand(lst));
 			if (exit)
+			{
+				for (it2 = lst.begin(); it2 != lst.end(); ++it2)
+				{
+					std::cout << (*it2)->toString() << std::endl;
+				}
 				break ;
+			}
 		}
 		if (!exit)
 			std::cerr << "Exit command missing at end of program." << std::endl;
+	}
+	catch (const Analyzer::UnknownInstructionException & e)
+	{
 	}
 	catch (const Parser::InstructionException & e)
 	{
@@ -83,13 +110,5 @@ int							main(int ac, char ** av)
 	catch (const Operator::AssertErrorException & e)
 	{
 	}
-	for(std::list<Token>::const_iterator it = tkns->begin(); it != tkns->end(); ++it)
-	{
-		if ((*it).getValue().compare("\n") == 0)
-			std::cout << "{\\n | Separator | " << (*it).getLineNum() << "}\n";
-		else
-			std::cout << "{" << *it << "}";
-	}
-	std::cout << std::endl;
 	return 0;
 }

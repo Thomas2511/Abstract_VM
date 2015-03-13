@@ -94,8 +94,8 @@ bool					Operator::_dump(std::list<const IOperand *> & lst)
 {
 	std::list<const IOperand *>::iterator		it;
 
-	for (it = lst.begin(); it != lst.end(); --it)
-		(*it)->toString();
+	for (it = lst.begin(); it != lst.end(); ++it)
+		std::cout << (*it)->toString();
 	return (false);
 }
 

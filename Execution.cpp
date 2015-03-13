@@ -4,7 +4,7 @@ Execution::~Execution( void )
 {
 }
 
-std::list<Operator *>			Execution::createExecutionList(std::list<Token> tkns)
+std::list<Operator *>			Execution::createExecutionList(std::list<Token> & tkns)
 {
 	std::list<Operator *>		op;
 	std::list<Token>::iterator	it;
@@ -16,14 +16,14 @@ std::list<Operator *>			Execution::createExecutionList(std::list<Token> tkns)
 		if ((*it).getType() == OPERATOR_VAL)
 		{
 			tk = *it;
-			it++;
-			it++;
+			++it;
+			++it;
 			tk2 = *it;
 			op.push_back(new Operator(_checkCommand(tk), _checkOperand(tk2), (*it).getLineNum(), (*it).getValue()));
 			it++;
 		}
 		if ((*it).getType() == OPERATOR)
-			op.push_back(new Operator(_checkCommand(tk), (*it).getLineNum()));
+			op.push_back(new Operator(_checkCommand(*it), (*it).getLineNum()));
 	}
 	return op;
 }

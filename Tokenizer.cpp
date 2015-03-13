@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iostream>
 #include <cstring>
 #include "Tokenizer.hpp"
 
@@ -41,6 +42,11 @@ std::list<Token> *				Tokenizer::tokenize(std::string const & content)
 			break;
 		i = found++;
 	}
+
+		for(std::list<Token>::iterator tk = ret->begin(); tk != ret->end(); ++tk)
+		{
+			std::cout << (*tk).getValue();
+		}
 
 	return ret;
 }
