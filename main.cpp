@@ -15,16 +15,8 @@ int							main(int ac, char ** av)
 
 	if (ac == 1)
 	{
-		while (std::getline(std::cin, line))
-		{
-			if (!line.compare(";;"))
-			{
-				ss << "exit" << std::endl;
-				break ;
-			}
+		while (std::getline(std::cin, line) && line.compare(";;"))
 			ss << line << std::endl;
-		}
-		std::cout << ss.str();
 	}
 	else if (ac == 2)
 	{
@@ -48,13 +40,8 @@ int							main(int ac, char ** av)
 	try
 	{
 		tkns = Tokenizer::tokenize(ss.str());
-	/*	Analyzer::analyzer(tkns);
-		Parser::parse(tkns);*/
-
-		for(std::list<Token>::iterator tk = tkns->begin(); tk != tkns->end(); ++tk)
-		{
-			std::cout << (*tk).getValue() << std::endl;
-		}
+		Analyzer::analyzer(tkns);
+		Parser::parse(tkns);
 
 		std::list<Operator *>				exec;
 		std::list<Operator *>::iterator		it;
@@ -64,51 +51,65 @@ int							main(int ac, char ** av)
 
 		exec = Execution::createExecutionList(*tkns);
 		for (it = exec.begin(); it != exec.end(); ++it)
-		{
-			std::cout << "-----------------------" << std::endl;
-			std::cout << (*it)->getValue() << std::endl;
 			exit = ((*it)->callCommand(lst));
-			if (exit)
-			{
-				for (it2 = lst.begin(); it2 != lst.end(); ++it2)
-				{
-					std::cout << (*it2)->toString() << std::endl;
-				}
-				break ;
-			}
-		}
 		if (!exit)
 			std::cerr << "Exit command missing at end of program." << std::endl;
 	}
 	catch (const Analyzer::UnknownInstructionException & e)
 	{
+		std::cerr << e.what() << std::endl;
 	}
-	catch (const Parser::InstructionException & e)
+	catch (const Calculator::FloatingPointException & e)
 	{
+		std::cerr << e.what() << std::endl;
 	}
-	catch (const Parser::PrecisionException & e)
+	catch (const OperandFactory::OperandOverflowException & e)
 	{
+		std::cerr << e.what() << std::endl;
 	}
-	catch (const Parser::LeftParenthesisException & e)
+	catch (const OperandFactory::OperandUnderflowException & e)
 	{
+		std::cerr << e.what() << std::endl;
 	}
-	catch (const Parser::RightParenthesisException & e)
+	catch (const Operator::StackTooShortException & e)
 	{
-	}
-	catch (const Parser::NaturalValueException & e)
-	{
-	}
-	catch (const Parser::FloatingValueException & e)
-	{
-	}
-	catch (const Parser::SeparatorException & e)
-	{
+		std::cerr << e.what() << std::endl;
 	}
 	catch (const Operator::EmptyStackException & e)
 	{
+		std::cerr << e.what() << std::endl;
 	}
 	catch (const Operator::AssertErrorException & e)
 	{
+		std::cerr << e.what() << std::endl;
+	}
+	catch (const Parser::InstructionException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::PrecisionException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::LeftParenthesisException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::RightParenthesisException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::NaturalValueException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::FloatingValueException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
+	}
+	catch (const Parser::SeparatorException & e)
+	{
+		//In order to have the expected value by the parser, the exception is caught in the parse() function.
 	}
 	return 0;
 }

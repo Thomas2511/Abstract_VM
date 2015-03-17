@@ -24,12 +24,20 @@ enum	command
 class Operator
 {
 	public:
-		class EmptyStackException : public std::exception //TODO change to prognameException
+		class OperatorException : public std::exception
+		{
+		};
+		class StackTooShortException : public OperatorException
 		{
 			public:
 				virtual const char * what() const throw();
 		};
-		class AssertErrorException : public std::exception //TODO change to prognameException
+		class EmptyStackException : public OperatorException
+		{
+			public:
+				virtual const char * what() const throw();
+		};
+		class AssertErrorException : public OperatorException
 		{
 			public:
 				virtual const char * what() const throw();

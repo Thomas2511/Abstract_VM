@@ -19,6 +19,8 @@ bool				Analyzer::analyzer(std::list<Token> * tkns)
 		&Analyzer::isSeparator
 	};
 	std::list<Token>::iterator		it;
+	try
+	{
 	for (it = tkns->begin(); it != tkns->end(); ++it)
 	{
 		for (int i = 0; i < 9; i++)
@@ -28,6 +30,12 @@ bool				Analyzer::analyzer(std::list<Token> * tkns)
 		}
 		if ((*it).getType() == UNKNOWN)
 			throw Analyzer::UnknownInstructionException::UnknownInstructionException();
+	}
+	}
+	catch (UnknownInstructionException & e)
+	{
+		std::cerr << "Line " << (*it).getLineNum() << ": Error : ";
+		throw ;
 	}
 	int nb = tkns->back().getLineNum();
 	tkns->push_back(Token(END_OF_FILE, nb));

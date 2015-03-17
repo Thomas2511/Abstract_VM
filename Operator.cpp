@@ -1,5 +1,10 @@
 #include "Operator.hpp"
 
+const char *			Operator::StackTooShortException::what() const throw()
+{
+	return "Stack contains less than two elements.";
+}
+
 const char *			Operator::EmptyStackException::what() const throw()
 {
 	return "Empty Stack";
@@ -37,6 +42,8 @@ Operator &				Operator::operator=(Operator const & rhs)
 
 bool					Operator::callCommand(std::list<const IOperand *> & lst)
 {
+	bool				b;
+
 	fun					f[] =
 	{
 		&Operator::_push,
@@ -51,7 +58,16 @@ bool					Operator::callCommand(std::list<const IOperand *> & lst)
 		&Operator::_print,
 		&Operator::_exit
 	};
-	return (this->*f[this->getCommand()])(lst);
+	try
+	{
+		b = (this->*f[this->getCommand()])(lst);
+	}
+	catch (OperatorException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error :";
+		throw ;
+	}
+	return b;
 }
 
 command					Operator::getCommand( void )
@@ -78,14 +94,27 @@ bool					Operator::_push(std::list<const IOperand *> & lst)
 {
 	OperandFactory		of;
 
-	lst.push_front(of.createOperand(this->_operand, this->_value));
+	try
+	{
+		lst.push_front(of.createOperand(this->_operand, this->_value));
+	}
+	catch (OperandFactory::OperandOverflowException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error :";
+		throw ;
+	}
+	catch (OperandFactory::OperandUnderflowException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error :";
+		throw ;
+	}
 	return (false);
 }
 
 bool					Operator::_pop(std::list<const IOperand *> & lst)
 {
-	if (lst.size() == 0)
-		throw Operator::EmptyStackException::EmptyStackException();
+	if (lst.empty())
+		throw EmptyStackException();
 	lst.pop_front();
 	return (false);
 }
@@ -95,104 +124,123 @@ bool					Operator::_dump(std::list<const IOperand *> & lst)
 	std::list<const IOperand *>::iterator		it;
 
 	for (it = lst.begin(); it != lst.end(); ++it)
-		std::cout << (*it)->toString();
+		std::cout << (*it)->toString() << std::endl;
 	return (false);
 }
 
 bool					Operator::_assert(std::list<const IOperand *> & lst)
 {
 	if (lst.front()->toString().compare(this->_value))
-		throw Operator::AssertErrorException::AssertErrorException();
+		throw AssertErrorException();
 	return (false);
 }
 
 bool					Operator::_add(std::list<const IOperand *> & lst)
 {
-	std::list<const IOperand *>::iterator		lhs;
-	std::list<const IOperand *>::iterator		rhs;
+	const IOperand *							lhs;
+	const IOperand *							rhs;
 
-	lhs = lst.begin();
-	++lhs;
-	rhs = lst.begin();
-	Operator::_pop(lst);
-	Operator::_pop(lst);
-	lst.push_back(*(*lhs) + *(*rhs));
-	delete *lhs;
-	delete *rhs;
+	if (lst.size() < 2)
+		throw StackTooShortException();
+	rhs = (*lst.begin());
+	lst.pop_front();
+	lhs = (*lst.begin());
+	lst.pop_front();
+	lst.push_back(*lhs + *rhs);
+	delete lhs;
+	delete rhs;
 	return (false);
 }
 
 bool					Operator::_sub(std::list<const IOperand *> & lst)
 {
-	std::list<const IOperand *>::iterator		lhs;
-	std::list<const IOperand *>::iterator		rhs;
+	const IOperand *							lhs;
+	const IOperand *							rhs;
 
-	lhs = lst.begin();
-	++lhs;
-	rhs = lst.begin();
-	Operator::_pop(lst);
-	Operator::_pop(lst);
-	lst.push_back(*(*lhs) - *(*rhs));
-	delete *lhs;
-	delete *rhs;
+	if (lst.size() < 2)
+		throw StackTooShortException();
+	rhs = (*lst.begin());
+	lst.pop_front();
+	lhs = (*lst.begin());
+	lst.pop_front();
+	lst.push_back(*lhs - *rhs);
+	delete lhs;
+	delete rhs;
 	return (false);
 }
 
 bool					Operator::_mul(std::list<const IOperand *> & lst)
 {
-	std::list<const IOperand *>::iterator		lhs;
-	std::list<const IOperand *>::iterator		rhs;
+	const IOperand *							lhs;
+	const IOperand *							rhs;
 
-	lhs = lst.begin();
-	++lhs;
-	rhs = lst.begin();
-	Operator::_pop(lst);
-	Operator::_pop(lst);
-	lst.push_back(*(*lhs) * *(*rhs));
-	delete *lhs;
-	delete *rhs;
+	if (lst.size() < 2)
+		throw StackTooShortException();
+	rhs = (*lst.begin());
+	lst.pop_front();
+	lhs = (*lst.begin());
+	lst.pop_front();
+	lst.push_back(*lhs * *rhs);
+	delete lhs;
+	delete rhs;
 	return (false);
 }
 
 bool					Operator::_div(std::list<const IOperand *> & lst)
 {
-	std::list<const IOperand *>::iterator		lhs;
-	std::list<const IOperand *>::iterator		rhs;
+	const IOperand *							lhs;
+	const IOperand *							rhs;
 
-	lhs = lst.begin();
-	++lhs;
-	rhs = lst.begin();
-	Operator::_pop(lst);
-	Operator::_pop(lst);
-	lst.push_back(*(*lhs) / *(*rhs));
-	delete *lhs;
-	delete *rhs;
+	if (lst.size() < 2)
+		throw StackTooShortException();
+	rhs = (*lst.begin());
+	lst.pop_front();
+	lhs = (*lst.begin());
+	lst.pop_front();
+	try
+	{
+		lst.push_back(*lhs / *rhs);
+	}
+	catch (Calculator::FloatingPointException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error :";
+	}
+	delete lhs;
+	delete rhs;
 	return (false);
 }
 
 bool					Operator::_mod(std::list<const IOperand *> & lst)
 {
-	std::list<const IOperand *>::iterator		lhs;
-	std::list<const IOperand *>::iterator		rhs;
+	const IOperand *							lhs;
+	const IOperand *							rhs;
 
-	lhs = lst.begin();
-	++lhs;
-	rhs = lst.begin();
-	Operator::_pop(lst);
-	Operator::_pop(lst);
-	lst.push_back(*(*lhs) % *(*rhs));
-	delete *lhs;
-	delete *rhs;
+	if (lst.size() < 2)
+		throw StackTooShortException();
+	rhs = (*lst.begin());
+	lst.pop_front();
+	lhs = (*lst.begin());
+	lst.pop_front();
+	try
+	{
+		lst.push_back(*lhs % *rhs);
+	}
+	catch (Calculator::FloatingPointException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error :";
+	}
+	delete lhs;
+	delete rhs;
 	return (false);
 }
 
 bool					Operator::_print(std::list<const IOperand *> & lst)
 {
 	if (lst.size() == 0)
-		throw Operator::EmptyStackException::EmptyStackException();
+		throw EmptyStackException();
 	if (lst.front()->getType() != INT8)
-		throw Operator::AssertErrorException::AssertErrorException();
-	std::cout << static_cast<char>(atoi(lst.front()->toString().c_str()));
+		throw AssertErrorException();
+	std::cout << static_cast<char>(atoi(lst.front()->toString().c_str())) << std::endl;;
 	return (false);
 }
 

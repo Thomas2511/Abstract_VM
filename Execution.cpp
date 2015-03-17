@@ -17,13 +17,16 @@ std::list<Operator *>			Execution::createExecutionList(std::list<Token> & tkns)
 		{
 			tk = *it;
 			++it;
-			++it;
 			tk2 = *it;
+			++it;
+			++it;
 			op.push_back(new Operator(_checkCommand(tk), _checkOperand(tk2), (*it).getLineNum(), (*it).getValue()));
-			it++;
 		}
 		if ((*it).getType() == OPERATOR)
+		{
 			op.push_back(new Operator(_checkCommand(*it), (*it).getLineNum()));
+			(*it).getValue();
+		}
 	}
 	return op;
 }
@@ -57,11 +60,11 @@ eOperandType					Execution::_checkOperand(Token tkn)
 {
 	std::string					tab[] =
 	{
-		"Int8",
-		"Int16",
-		"Int32",
-		"Float",
-		"Double"
+		"int8",
+		"int16",
+		"int32",
+		"float",
+		"double"
 	};
 
 	for (int i = 0; i < 5; i++)

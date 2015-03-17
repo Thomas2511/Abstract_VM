@@ -44,9 +44,9 @@ IOperand const * OperandFactory::_createInt16( std::string const & value ) const
 	int					ivalue;
 	std::stringstream	ss;
 
-	if (dvalue < std::numeric_limits<char>::min())
+	if (dvalue < std::numeric_limits<short int>::min())
 		throw OperandUnderflowException();
-	if (dvalue > std::numeric_limits<char>::max())
+	if (dvalue > std::numeric_limits<short int>::max())
 		throw OperandOverflowException();
 	ivalue = static_cast<int>(dvalue);
 	ss << ivalue;
@@ -59,9 +59,9 @@ IOperand const * OperandFactory::_createInt32( std::string const & value ) const
 	int					ivalue;
 	std::stringstream	ss;
 
-	if (dvalue < std::numeric_limits<char>::min())
+	if (dvalue < std::numeric_limits<int>::min())
 		throw OperandUnderflowException();
-	if (dvalue > std::numeric_limits<char>::max())
+	if (dvalue > std::numeric_limits<int>::max())
 		throw OperandOverflowException();
 	ivalue = static_cast<int>(dvalue);
 	ss << ivalue;
@@ -72,7 +72,7 @@ IOperand const * OperandFactory::_createFloat( std::string const & value ) const
 {
 	double			dvalue = std::atof(value.c_str());
 
-	if (dvalue > 0.0 && abs(dvalue) < std::numeric_limits<float>::min())
+	if (abs(dvalue) > 0.0 && abs(dvalue) < std::numeric_limits<float>::min())
 		throw OperandUnderflowException();
 	if (abs(dvalue) > std::numeric_limits<float>::max())
 		throw OperandOverflowException();
@@ -83,7 +83,7 @@ IOperand const * OperandFactory::_createDouble( std::string const & value ) cons
 {
 	double			dvalue = std::atof(value.c_str());
 
-	if (dvalue > 0.0 && abs(dvalue) < std::numeric_limits<double>::min())
+	if (abs(dvalue) > 0.0 && abs(dvalue) < std::numeric_limits<double>::min())
 		throw OperandUnderflowException();
 	if (abs(dvalue) > std::numeric_limits<double>::max())
 		throw OperandOverflowException();
