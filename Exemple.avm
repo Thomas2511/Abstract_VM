@@ -7,12 +7,12 @@ push int32(33)
 
 add
 
-push float(44.55)
+push float(34.5)
 
-mul
+div
 
 push double(42.42)
-push int32(42)
+push int8(4)
 
 dump
 

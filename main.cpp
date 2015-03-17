@@ -44,14 +44,16 @@ int							main(int ac, char ** av)
 		Parser::parse(tkns);
 
 		std::list<Operator *>				exec;
-		std::list<Operator *>::iterator		it;
+		std::list<Operator *>::const_iterator	it;
 		std::list<const IOperand *>			lst;
-		std::list<const IOperand *>::iterator	it2;
 		bool								exit = false;
 
 		exec = Execution::createExecutionList(*tkns);
 		for (it = exec.begin(); it != exec.end(); ++it)
-			exit = ((*it)->callCommand(lst));
+		{
+			if (!exit)
+				exit = ((*it)->callCommand(lst));
+		}
 		if (!exit)
 			std::cerr << "Exit command missing at end of program." << std::endl;
 	}

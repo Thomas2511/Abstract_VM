@@ -10,13 +10,11 @@ std::list<Token> *				Tokenizer::tokenize(std::string const & content)
 	std::string					value;
 	std::stringstream			ss;
 	Token						tkn;
-	int							lineNum = 0;
+	int							lineNum = 1;
 
 	for (unsigned int i = 0; i < content.size(); i++)
 	{
 		found = content.find_first_of(" \n();", found);
-		if (content[found] == '\n')
-			lineNum++;
 		value = content.substr(i, found - i);
 		if (value.compare("") != 0)
 		{
@@ -30,6 +28,8 @@ std::list<Token> *				Tokenizer::tokenize(std::string const & content)
 			tkn.setValue(ss.str());
 			tkn.setLineNum(lineNum);
 			ret->push_back(tkn);
+			if (content[found] == '\n')
+				lineNum++;
 			ss.str(std::string());
 		}
 		if (content[found] == ';')

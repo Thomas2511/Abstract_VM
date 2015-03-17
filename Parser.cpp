@@ -2,37 +2,37 @@
 
 const char *					Parser::InstructionException::what() const throw()
 {
-	return ("Instruction exception : instruction 'push | pop | dump | assert | add | sub | mul | div | print | exit' expected, got ");
+	return ("Instruction exception : instruction 'push | pop | dump | assert | add | sub | mul | div | print | exit' expected, got \"");
 }
 
 const char *					Parser::PrecisionException::what() const throw()
 {
-	return ("Precision exception : precision 'int8 | int16 | int32 | float | double' expected, got ");
+	return ("Precision exception : precision 'int8 | int16 | int32 | float | double' expected, got \"");
 }
 
 const char *					Parser::LeftParenthesisException::what() const throw()
 {
-	return ("Left Parenthesis exception : '(' expected, got ");
+	return ("Left Parenthesis exception : '(' expected, got \"");
 }
 
 const char *					Parser::RightParenthesisException::what() const throw()
 {
-	return ("Right Parenthesis exception : ')' expected, got ");
+	return ("Right Parenthesis exception : ')' expected, got \"");
 }
 
 const char *					Parser::NaturalValueException::what() const throw()
 {
-	return ("Natural Value exception : '[-]?[0..9]+' expected, got ");
+	return ("Natural Value exception : '[-]?[0..9]+' expected, got \"");
 }
 
 const char *					Parser::FloatingValueException::what() const throw()
 {
-	return ("Floating Value exception : '[-]?[0..9]+.[0..9]+' expected, got ");
+	return ("Floating Value exception : '[-]?[0..9]+.[0..9]+' expected, got \"");
 }
 
 const char *					Parser::SeparatorException::what() const throw()
 {
-	return ("Separator exception : '\\n' expected, got ");
+	return ("Separator exception : '\\n' expected, got \"");
 }
 
 bool		Parser::parse(std::list<Token> * tokens)
@@ -51,7 +51,7 @@ bool		Parser::parse(std::list<Token> * tokens)
 	}
 	catch (const ParserException & e)
 	{
-		std::cerr << "Line " << (*it).getLineNum() << " : Error : " << e.what() << (*it).getValue() << std::endl;
+		std::cerr << "Line " << (*it).getLineNum() << " : Error : " << e.what() << (*it).getValue() << "\""<< std::endl;
 		throw ;
 	}
 	return true;

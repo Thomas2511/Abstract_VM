@@ -64,7 +64,17 @@ bool					Operator::callCommand(std::list<const IOperand *> & lst)
 	}
 	catch (OperatorException & e)
 	{
-		std::cerr << "Line " << this->_line << ": Error :";
+		std::cerr << "Line " << this->_line << ": Error : ";
+		throw ;
+	}
+	catch (OperandFactory::OperandOverflowException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error : ";
+		throw ;
+	}
+	catch (OperandFactory::OperandUnderflowException & e)
+	{
+		std::cerr << "Line " << this->_line << ": Error : ";
 		throw ;
 	}
 	return b;
@@ -94,20 +104,7 @@ bool					Operator::_push(std::list<const IOperand *> & lst)
 {
 	OperandFactory		of;
 
-	try
-	{
-		lst.push_front(of.createOperand(this->_operand, this->_value));
-	}
-	catch (OperandFactory::OperandOverflowException & e)
-	{
-		std::cerr << "Line " << this->_line << ": Error :";
-		throw ;
-	}
-	catch (OperandFactory::OperandUnderflowException & e)
-	{
-		std::cerr << "Line " << this->_line << ": Error :";
-		throw ;
-	}
+	lst.push_front(of.createOperand(this->_operand, this->_value));
 	return (false);
 }
 
@@ -203,7 +200,8 @@ bool					Operator::_div(std::list<const IOperand *> & lst)
 	}
 	catch (Calculator::FloatingPointException & e)
 	{
-		std::cerr << "Line " << this->_line << ": Error :";
+		std::cerr << "Line " << this->_line << ": Error : ";
+		throw ;
 	}
 	delete lhs;
 	delete rhs;
@@ -227,7 +225,8 @@ bool					Operator::_mod(std::list<const IOperand *> & lst)
 	}
 	catch (Calculator::FloatingPointException & e)
 	{
-		std::cerr << "Line " << this->_line << ": Error :";
+		std::cerr << "Line " << this->_line << ": Error : ";
+		throw ;
 	}
 	delete lhs;
 	delete rhs;

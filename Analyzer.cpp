@@ -150,7 +150,7 @@ bool				Analyzer::isNaturalVal(Token & tkn)
 
 	if (value[i] == '-')
 		i++;
-	while (i < (value.size() - 1))
+	while (i < (value.size()))
 	{
 		if (!isdigit(value[i]))
 			return 0;
@@ -173,7 +173,7 @@ bool				Analyzer::isFloatingVal(Token & tkn)
 		i++;
 	if (found == std::string::npos)
 		return 0;
-	while (i < (value.size() - 1))
+	while (i < (value.size()))
 	{
 		if (!isdigit(value[i]) && i != found)
 			return 0;
