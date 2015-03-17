@@ -85,6 +85,10 @@ int							main(int ac, char ** av)
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	catch (const Operator::PrecisionErrorException & e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 	catch (const Parser::InstructionException & e)
 	{
 		//In order to have the expected value by the parser, the exception is caught in the parse() function.

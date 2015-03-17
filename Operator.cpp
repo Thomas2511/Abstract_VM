@@ -15,6 +15,11 @@ const char *			Operator::AssertErrorException::what() const throw()
 	return "Assert Error";
 }
 
+const char *			Operator::PrecisionErrorException::what() const throw()
+{
+	return "Wrong Precision for Print";
+}
+
 Operator::Operator(command cmd, int line) : _cmd(cmd), _line(line)
 {
 }
@@ -235,10 +240,10 @@ bool					Operator::_mod(std::list<const IOperand *> & lst)
 
 bool					Operator::_print(std::list<const IOperand *> & lst)
 {
-	if (lst.size() == 0)
+	if (lst.empty())
 		throw EmptyStackException();
 	if (lst.front()->getType() != INT8)
-		throw AssertErrorException();
+		throw PrecisionErrorException();
 	std::cout << static_cast<char>(atoi(lst.front()->toString().c_str())) << std::endl;;
 	return (false);
 }

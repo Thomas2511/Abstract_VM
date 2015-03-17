@@ -42,6 +42,11 @@ class Operator
 			public:
 				virtual const char * what() const throw();
 		};
+		class PrecisionErrorException : public OperatorException
+		{
+			public:
+				virtual const char * what() const throw();
+		};
 		Operator( void );
 		Operator(command cmd, int line);
 		Operator(command cmd, eOperandType op, int line, std::string value);
